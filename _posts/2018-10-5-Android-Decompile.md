@@ -1,0 +1,91 @@
+---
+layout: post
+title: Android反编译
+---
+
+以下情况不适于腾讯云乐固、360加固、爱加密等第三方工具对apk加固过的应用，防止反编译二次打包
+
+反编译（未混淆情况）
+
+# 1.获取资源文件： #
+
+命令行界面`apktool.bat d -f  test.apk  fileName`  （然而修改后缀名为.zip即可获得）；
+
+apktool2.0以上版本：apktool.bat d -f  test.apk -o fileName, 有些apk编译失败，可尝试把apktool.jar升级到2.0以上
+
+# 2.获取源代码： #
+
+提取apk -> zip 中的classes.dex文件：dex2jar.bat   classes.dex 获得classes_dex2jar.jar文件
+
+使用 jd-gui.exe查看jar文件查看源码（另外可以用Eclipse反编译插件查看）
+
+# 3.查看xml文件 #
+
+`aapt d xmltree filepath/..apk  xmlname` :  以树型显示apk中某个xml文件
+
+工具下载：链接: http://pan.baidu.com/s/1o6CHvAi 密码: it6s
+
+# 4.二次打包 #
+
+`apktool.bat b fileName` (打包apk放在dist目录),生成到apk并不能安装，需要重签名才能安装
+
+# 5.重签名 #
+
+工具：keytool,jarsigner和zipalign这三个工具软件。keytool和jarsigner包含在JDK中，zipalign包含在Android SDK中，环境配置：JAVA_HOME，ANDROID_HOME
+
+生成密钥：`keytool -genkey -v -keystore xuhui-key.keystore -alias xuhui-key -keyalg RSA -keysize 2048 -validity 10000`
+
+重签名：
+
+
+    jarsigner -verbose -keystore demo.keystore -signedjar test_signed.apk test.apk mykey
+ 
+
+注：jarsigner在jdk/bin目录
+
+# [6.Eclipse jar文件反编译插件](https://bbs.csdn.net/topics/390263414) #
+
+# 7.修改class文件 #
+
+反编译后往往得到的是.class文件，通过class反编译为java文件通常容易出错，不如直接修改class文件 ，推荐试用工具：jclasslib
+
+1.装打开jar－然后找到需要修改的class文件或者直接打开jar解压文件中的class文件，
+
+2.使用java bytecode （jclasslib） 查找到要修改的变量地址
+
+3.新建一个工程进行修改：
+
+	package com.xuh;
+	 
+	import java.io.*;
+	 
+	import org.gjt.jclasslib.io.ClassFileWriter;
+	import org.gjt.jclasslib.structures.CPInfo;
+	import org.gjt.jclasslib.structures.ClassFile;
+	import org.gjt.jclasslib.structures.constants.ConstantDoubleInfo;
+	 
+	public class ModifyByteCode {
+	    public void Run() {
+	        try {
+	            String filePath = "C:\\Test.class";//需要修改的class文件
+	            FileInputStream fis = new FileInputStream(filePath);
+	            DataInput di = new DataInputStream(fis);
+	            ClassFile cf = new ClassFile();
+	            cf.read(di);
+	            CPInfo[] infos = cf.getConstantPool();
+	            int pos = 123;//变量地址
+	            if (infos[pos] != null) {
+	                ConstantDoubleInfo uInfo = (ConstantDoubleInfo) infos[pos];
+	                uInfo.setDouble(1.0);
+	                infos[pos] = uInfo;
+	            }
+	            cf.setConstantPool(infos);
+	            fis.close();
+	            File f = new File(filePath);
+	            ClassFileWriter.writeToFile(f, cf);
+	        } catch (Exception e) {
+	 
+	        }
+	    }
+	}
+
