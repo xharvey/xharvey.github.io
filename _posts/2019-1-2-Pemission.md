@@ -9,12 +9,12 @@ targetsdkversion：目标设备sdk版本，Android适配兼容版本
 危险权限：同样配置在AndroidMnifest.xml中，一般sdk会申请很多危险权限（识别手机状态身份、读写收短信等）。
 
 
-> targetsdkversion ：相当于App兼容适配到的版本，Andoird6.0 API level 为23。
+targetsdkversion ：相当于App兼容适配到的版本，Andoird6.0 API level 为23。
 分以下情况：
-①targetsdkversion < 23 ，用户手机系统低于6.0，安装时默认获得此权限，且用户无法主动取消此权限。
-②targetsdkversion < 23 ，用户手机系统高于6.0，安装时默认获得此权限，且用户可以主动取消此权限。
-③targetsdkversion >=23  ,  用户手机系统低于6.0，安装时默认获得此权限，且用户无法主动取消此权限。
-④targetsdkversion >= 23 ，用户手机系统高于6.0 ,  安装时不会获得此权限，需要在运行时想用户申请此权限，
+- ①targetsdkversion < 23 ，用户手机系统低于6.0，安装时默认获得此权限，且用户无法主动取消此权限。
+- ②targetsdkversion < 23 ，用户手机系统高于6.0，安装时默认获得此权限，且用户可以主动取消此权限。
+- ③targetsdkversion >=23  ,  用户手机系统低于6.0，安装时默认获得此权限，且用户无法主动取消此权限。
+- ④targetsdkversion >= 23 ，用户手机系统高于6.0 ,  安装时不会获得此权限，需要在运行时想用户申请此权限，
 授权后可以主动取消此权限，但是如果申请时拒绝，系统会默认记住，不会在下次启动时再次申请。需要检测，
 并在游戏启动时给与玩家提示去进行授权。
 
