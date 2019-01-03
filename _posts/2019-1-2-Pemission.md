@@ -1,5 +1,4 @@
-Android 权限小结：
-
+sdk接入过程中常遇到Andorid6.0已上一些权限获取不到，由于高版本系统对危险权限做了严格限定，对权限做了小结：
 
 targetsdkversion：目标设备sdk版本，Android适配兼容版本
 由于线上怒焰版本部分渠道targetsdkversion已经>=23,而渠道上架targetsdkversion只能升不能降(覆盖安装失败)。所以只能动态去获取，获取失败提示去设置中打开。一般sdk中会去申请定位、识别手机识别码、电话短信、读写外部存储等危险权限。
@@ -113,5 +112,5 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
 
 
 备注：
-①应用宝渠道如果不授权READ_PHONE_STATE（识别手机状态和身份）会造成QQ登录失败，魅族等渠道遇到不授权游戏中造成crash。
-②如果线上版本已经>= 23，降低targetsdkversion 会和降低versioncode一样，造成覆盖安装失败，不能通过降低targetsdkversion 来使用户默认获得必须的权限。
+- ①应用宝渠道如果不授权READ_PHONE_STATE（识别手机状态和身份）会造成QQ登录失败，魅族等渠道遇到不授权游戏中造成crash。
+- ②如果线上版本已经>= 23，降低targetsdkversion 会和降低versioncode一样，造成覆盖安装失败，不能通过降低targetsdkversion 来使用户默认获得必须的权限。
